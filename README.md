@@ -275,8 +275,8 @@ There is an implementation of Kafka Streams in python named Faust. And yet Faust
 - [Hive Introduction](https://youtu.be/cMziv1iYt28?si=chzEEPKILW-2Ovow)
 - [Iceberg Introduction](https://youtu.be/TsmhRZElPvM?si=V8tvEUZhRCEIlq8G)
 - [How Iceberg Stores Data](https://youtu.be/xfAYLAFCLvM?si=mgZocoUYGFJo9CKp)
-- [A bit more on iceberg benefits](https://iceberg.apache.org/)
-- [More on Iceberg Catalog Mechanics](https://youtu.be/4hcfveg1t70?si=0NhYDRmg6jyGqkQq)
+- [Another intro to iceberg](https://vutr.substack.com/p/i-spent-8-hours-learning-apache-iceberg)
+- [Streaming with iceberg](https://www.ryft.io/blog/streaming-with-apache-iceberg-the-operational-problems-at-scale)
 - [Detailed talk on iceberg](https://www.youtube.com/watch?v=kJaD0WuQ1Bg) - optional
 
 ### Data Partitioning
