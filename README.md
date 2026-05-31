@@ -10,7 +10,7 @@ Welcome to Optimus! This repository is designed to guide you through a set of to
 2. Clone your fork locally:  
    `git clone <your-fork-url>`
 3. Work on the exercises in their respective folders.
-4. Work on a seperate branch for each exercise.
+4. Work on a separate branch for each exercise.
 5. When you're ready, create a pull request for an exercise and inform your superior for a CR.
 6. The pull request should be to your forked repository.
 
@@ -118,9 +118,9 @@ Quick overview about s3
 - [S3 Guide](https://youtu.be/tfU0JEZjcsg?si=ch-W6mPULHn79Ars)
 
 #### 5.4. Redis
-Inroduction to Redis and learning the syntax
+Introduction to Redis and learning the syntax
 - [Redis Introduction](https://youtu.be/G1rOthIU-uo?si=jhEWzfj59GZrHBg7)
-- [Redis Begginers' Guide](https://daily.dev/blog/redis-basics-for-new-developers)
+- [Redis Beginers' Guide](https://daily.dev/blog/redis-basics-for-new-developers)
 
 ---
 
@@ -158,7 +158,7 @@ Inroduction to Redis and learning the syntax
 ### Duration: 0.5 Days
 
 **Learning Material**:
-- [Begginers' Guide to Python Testing](https://medium.com/@sachinsoni600517/unit-testing-in-python-a-comprehensive-guide-for-beginners-985eec71bb4d)
+- [Beginers' Guide to Python Testing](https://medium.com/@sachinsoni600517/unit-testing-in-python-a-comprehensive-guide-for-beginners-985eec71bb4d)
 - [Pytest Documentation](https://docs.pytest.org/en/stable/)
 - [Mocking in Python](https://medium.com/@moraneus/the-art-of-mocking-in-python-a-comprehensive-guide-8b619529458f)
 
@@ -183,7 +183,7 @@ Inroduction to Redis and learning the syntax
  - [Context Manager](https://realpython.com/python-with-statement/)
  - [Iterators](https://www.geeksforgeeks.org/python/iterators-in-python/)
  - [Profiling](https://www.geeksforgeeks.org/python/memory-profiling-in-python-using-memory_profiler/)
- - [Garbge Collection](https://www.geeksforgeeks.org/python/garbage-collection-python/)
+ - [Garbage Collection](https://www.geeksforgeeks.org/python/garbage-collection-python/)
  - [Memory Management](https://www.geeksforgeeks.org/python/memory-management-in-python/)
  - [Tips](https://www.geeksforgeeks.org/python/optimization-tips-python-code/)
 
