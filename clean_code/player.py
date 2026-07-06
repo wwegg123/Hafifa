@@ -3,132 +3,132 @@ import pygame
 from tkinter.filedialog import *
 from tkinter import *
 pygame.init()
-global list1
-global pausing
-global list_index
-global SONG_END
-global text1
-global label1
+
 class FrameApp(Frame):
     def __init__(self,master):
         super(FrameApp, self).__init__(master)
-        global text1, label1, list1, pausing, list_index, SONG_END
         self.grid()
-        b1 = Button(self, text="PLAY SONG",command=button2,bg='AntiqueWhite1',width=40)
-        b1.grid(row=2,column=0)
-        b2 = Button(self, text="PREVIOUS SONG",command=button4,bg='AntiqueWhite1',width=40)
-        b2.grid(row=4,column=0)
-        b3 = Button(self, text="PAUSE/UNPAUSE",command=button3,bg='AntiqueWhite1',width=40)
-        b3.grid(row=3,column=0)
-        b4 = Button(self, text="NEXT SONG",command=button5,bg='AntiqueWhite1',width=40)
-        b4.grid(row=5,column=0)
-        b5 = Button(self, text="ADD TO LIST",command=button1,bg='AntiqueWhite1',width=40)
-        b5.grid(row=1,column=0)
-        label1 = Label(self, fg='Black',font=('Helvetica 12 bold italic',10),bg='ivory2')
-        label1.grid(row=6,column=0)
-        text1 = Text(self,wrap=WORD,width=60)
-        text1.grid(row=8,column=0)
-        list1 = list()
-        pausing = False
-        list_index = 0
-        SONG_END = pygame.USEREVENT + 1
-#################################################################################
-def button1():
-    global list_index, list1, SONG_END, pausing, label1, text1
-    try:
-        directory = askopenfilenames()
-        for song_dir in directory:
-            print(song_dir)
-            list1.append(song_dir)
-        text1.delete(0.0, END)
 
-        for key, item in enumerate(list1):
-            song = EasyID3(item)
-            song_data = (str(key + 1) + ' : ' + song['title'][0] + ' - '
-                         + song['artist'][0])
-            text1.insert(END, song_data + '\n')
-    except:
-        pass
-#################################################################################
-def song_data():
-    global list_index, list1, SONG_END, pausing, label1, text1
-    try:
-        song = EasyID3(list1[list_index])
-        song_data = "Now playing: Nr:" + str(list_index + 1) + " " + \
-                    str(song['title']) + " - " + str(song['artist'])
-        return song_data
-    except:
-        pass
-#################################################################################
-def button2():
-    global list_index, list1, SONG_END, pausing, label1, text1
-    try:
-        directory = list1[list_index]
-        pygame.mixer.music.load(directory)
-        pygame.mixer.music.play(1, 0.0)
-        pygame.mixer.music.set_endevent(SONG_END)
-        pausing = False
-        label1['text'] = song_data()
-    except:
-        pass
-#################################################################################
-def check_music():
-    global list_index, list1, SONG_END, pausing, label1, text1
-    try:
-        for event in pygame.event.get():
-            if event.type == SONG_END:
-                button5()
-    except:
-        pass
-#################################################################################
-def button3():
-    global list_index, list1, SONG_END, pausing, label1, text1
-    try:
-        if pausing:
-            pygame.mixer.music.unpause()
-            pausing = False
-        elif not pausing:
-            pygame.mixer.music.pause()
-            pausing = True
-    except:
-        pass
-#################################################################################
-def get_next_song():
-    global list_index, list1, SONG_END, pausing, label1, text1
-    try:
-        if list_index + 2 <= len(list1):
-            return list_index + 1
-        else:
-            return 0
-    except:
-        pass
-#################################################################################
-def button5():
-    global list_index, list1, SONG_END, pausing, label1, text1
-    try:
-        list_index = get_next_song()
-        button2()
-    except:
-        pass
-#################################################################################
-def get_previous_song():
-    global list_index, list1, SONG_END, pausing, label1, text1
-    try:
-        if list_index - 1 >= 0:
-            return list_index - 1
-        else:
-            return len(list1) - 1
-    except:
-        pass
-#################################################################################
-def button4():
-    global list_index, list1, SONG_END, pausing, label1, text1
-    try:
-        list_index = get_previous_song()
-        button2()
-    except:
-        pass
-#################################################################################
+        self.songs: list = []
+        self.current_song: int = 0
+        self.paused: bool = False
+        self.song_end: int = pygame.USEREVENT + 1
+        
+        self.play_btn: Button = Button(self, text="PLAY SONG",command=self.play_song,bg='AntiqueWhite1',width=40)
+        self.play_btn.grid(row=2,column=0)
+        
+        self.previous_btn: Button = Button(self, text="PREVIOUS SONG",command=self.previous_song,bg='AntiqueWhite1',width=40)
+        self.previous_btn.grid(row=4,column=0)
+        
+        self.pause_btn: Button = Button(self, text="PAUSE/UNPAUSE",command=self.pause_song,bg='AntiqueWhite1',width=40)
+        self.pause_btn.grid(row=3,column=0)
+        
+        self.next_btn: Button = Button(self, text="NEXT SONG",command=self.next_song,bg='AntiqueWhite1',width=40)
+        self.next_btn.grid(row=5,column=0)
+        
+        self.add_btn: Button = Button(self, text="ADD TO LIST",command=self.add_songs,bg='AntiqueWhite1',width=40)
+        self.add_btn.grid(row=1,column=0)
+        
+        self.currently_playing = Label(self, fg='Black',font=('Helvetica 12 bold italic',10),bg='ivory2')
+        self.currently_playing.grid(row=6,column=0)
+        
+        self.playlist_songs = Text(self,wrap=WORD,width=60)
+        self.playlist_songs.grid(row=8,column=0)
+        
+    #################################################################################
+    def add_songs(self):
+        try:
+            directory = askopenfilenames()
+            for song_dir in directory:
+                print(song_dir)
+                self.songs.append(song_dir)
+            self.playlist_songs.delete("1.0", END)
+            for key, item in enumerate(self.songs):
+                song = EasyID3(item)
+                song_data = (str(key + 1) + ' : ' + song['title'][0] + ' - ' +
+                    song['artist'][0])
+                self.playlist_songs.insert(END, song_data + '\n')
+        except Exception as e:
+            print(f"Error occurred: {e}")
+    #################################################################################
+    def song_data(self):
+        try:
+            song = EasyID3(self.songs[self.current_song])
+            song_data = "Now playing: Nr:" + str(self.current_song + 1) + " " + \
+                        str(song['title']) + " - " + str(song['artist'])
+            return song_data
+        except Exception as e:
+            print(f"Error occurred: {e}")
+    #################################################################################
+    def play_song(self):
+        try:
+            directory = self.songs[self.current_song]
+            pygame.mixer.music.load(directory)
+            pygame.mixer.music.play(1, 0.0)
+            pygame.mixer.music.set_endevent(self.song_end)
+            self.paused = False
+            self.currently_playing.config(text=self.song_data())
+        except Exception as e:
+            print(f"Error occurred: {e}")
+    #################################################################################
+    def check_music(self):
+        try:
+            for event in pygame.event.get():
+                if event.type == self.song_end:
+                    self.next_song()
+        except Exception as e:
+            print(f"Error occurred: {e}")
+    #################################################################################
+    def pause_song(self):
+        try:
+            if self.paused:
+                pygame.mixer.music.unpause()
+                self.paused = False
+            elif not self.paused:
+                pygame.mixer.music.pause()
+                self.paused = True
+        except Exception as e:
+            print(f"Error occurred: {e}")
+    #################################################################################
+    def get_next_song(self):
+        try:
+            if self.current_song + 2 <= len(self.songs):
+                return self.current_song + 1
+            else:
+                return 0
+        except Exception as e:
+            print(f"Error occurred: {e}")
+    #################################################################################
+    def next_song(self):
+        try:
+            self.current_song = self.get_next_song()
+            self.play_song()
+        except Exception as e:
+            print(f"Error occurred: {e}")
+    #################################################################################
+    def get_previous_song(self):
+        try:
+            if self.current_song - 1 >= 0:
+                return self.current_song - 1
+            else:
+                return len(self.songs) - 1
+        except Exception as e:
+            print(f"Error occurred: {e}")
+    #################################################################################
+    def previous_song(self):
+        try:
+            self.current_song = self.get_previous_song()
+            self.play_song()
+        except Exception as e:
+            print(f"Error occurred: {e}")
+    #################################################################################
+    def poll_music(self):
+        try:
+            self.check_music()
+        except Exception as e:
+            print(f"Error occurred: {e}")
+
+        self.after(100, self.poll_music)
 #################################################################################
 window = Tk()
 window.geometry("500x500")
@@ -136,7 +136,5 @@ window.title("MP3 Music Player")
 #################################################################################
 app = FrameApp(window)
 #################################################################################
-while True:
-    # runs mainloop of program
-    check_music()
-    app.update()
+app.poll_music()
+window.mainloop()
