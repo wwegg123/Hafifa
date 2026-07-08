@@ -18,6 +18,7 @@ def upload_air_quality_service(file, db):
         # if exists:
         #     continue
         if(not row["PM2.5"].isnumeric() or not row["NO2"].isnumeric() or not row["CO2"].isnumeric()):
+            print(f"invalid row: {row}")
             continue
 
         aqi_result, aqi_level_result = calculate_aqi(int(row["PM2.5"]), int(row["NO2"]), int(row["CO2"]))
