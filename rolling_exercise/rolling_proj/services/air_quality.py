@@ -42,7 +42,7 @@ def upload_air_quality_service(file, db):
             continue
             
         aqi_result, aqi_level_result = calculate_aqi(int(row["PM2.5"]), int(row["NO2"]), int(row["CO2"]))
-        record = convert_row_to_air_quality(row)
+        record = convert_row_to_air_quality(row, aqi_result, aqi_level_result)
         
         aqi_rows.append(record)
         if aqi_result > 300 :
