@@ -1,8 +1,5 @@
 from models.alerts import Alerts
-from calculate_aqi import calculate_aqi
-from sqlalchemy import select, func
-import codecs
-import csv
+from sqlalchemy import select
 
 def get_alerts(date, city, db):
     query = select(Alerts)
@@ -11,4 +8,5 @@ def get_alerts(date, city, db):
 
     query = query.where(Alerts.city == city) if city else query
 
-    return db.execute(query).fetch_all()
+    results = db.execute(query).fetchall()
+    return [row[0] for row in results]

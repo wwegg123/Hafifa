@@ -1,5 +1,5 @@
 from models.air_quality import Air_Quality
-from calculate_aqi import calculate_aqi
+from services.calculate_aqi import calculate_aqi
 from sqlalchemy import select
 import codecs
 import csv
@@ -15,8 +15,10 @@ def upload_air_quality_service(file, db):
 
         # if exists:
         #     continue
+        if(not row["PM2.5"].isnumeric() or not row["NO2"].isnumeric() or not row["CO2"].isnumeric()):
+            continue
 
-        aqi_result, aqi_level_result = calculate_aqi(row["PM2.5"], row["NO2"], row["CO2"])
+        aqi_result, aqi_level_result = calculate_aqi(int(row["PM2.5"]), int(row["NO2"]), int(row["CO2"]))
 
         record = Air_Quality(
             date= row["date"],
@@ -43,17 +45,20 @@ def get_air_quality(start_date, end_date, city, db):
     query = query.where(Air_Quality.date <= end_date) if end_date else query
 
     query = query.where(Air_Quality.city == city) if city else query
-
-    return db.execute(query).fetch_all()
+    results = db.execute(query).fetchall()
+    return [row[0] for row in results]
 
 def get_best(db):
     query = select(Air_Quality).order_by(Air_Quality.aqi.asc()).limit(3)
-    return db.execute(query).fetch_all() 
+    results = db.execute(query).fetchall()
+    return [row[0] for row in results]
 
 def get_city_history(city , db):
     query = select(Air_Quality).where(Air_Quality.city == city)
-    return db.execute(query).fetch_all() 
+    results = db.execute(query).fetchall()
+    return [row[0] for row in results] 
 
 def get_city_avg(city, db):
     query = select(Air_Quality.city_name, db.func.avg(Air_Quality.aqi)).where(Air_Quality.city == city)
-    return db.execute(query).fetch_all() 
+    results = db.execute(query).fetchall()
+    return [row[0] for row in results]
