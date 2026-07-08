@@ -10,14 +10,14 @@ def upload_air_quality_service(file, db):
     aqi_rows = []
     alert_rows = []
     for row in csvReader:
-        # stmt = select(air_quality).where(
-        #   and_(air_quality.columns.date == row[date], air_quality.columns.city == row[city])
-        
-        # exists = db.execute(stmt).fetchall()
-
-        # if exists:
-        #     continue
-        if(not row["PM2.5"].isnumeric() or not row["NO2"].isnumeric() or not row["CO2"].isnumeric()):
+        query = select(Air_Quality)
+        query = query.where(Air_Quality.date == row["date"])
+        query = query.where(Air_Quality.city == row["city"])
+        results = db.execute(query).fetchall()
+        if(len(results) > 0):
+            print(f"Duplicate row: {row}")
+            continue
+        elif(not row["PM2.5"].isnumeric() or not row["NO2"].isnumeric() or not row["CO2"].isnumeric()):
             print(f"invalid row: {row}")
             continue
 
