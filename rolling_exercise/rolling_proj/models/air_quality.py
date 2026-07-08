@@ -16,6 +16,7 @@ class Air_Quality(Base):
     no2 = Column(Integer)
     co2 = Column(Integer)
     aqi = Column(Float)
+    aqi_level = Column(String)
 
 
 Base.metadata.create_all(engine)
