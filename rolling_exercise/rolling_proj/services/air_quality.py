@@ -1,4 +1,5 @@
 from models.air_quality import Air_Quality
+from models.alerts import Alerts
 from services.calculate_aqi import calculate_aqi
 from sqlalchemy import select
 import codecs
@@ -6,7 +7,8 @@ import csv
 
 def upload_air_quality_service(file, db):
     csvReader = csv.DictReader(codecs.iterdecode(file.file, 'utf-8'))
-    rows = []
+    aqi_rows = []
+    alert_rows = []
     for row in csvReader:
         # stmt = select(air_quality).where(
         #   and_(air_quality.columns.date == row[date], air_quality.columns.city == row[city])
@@ -29,12 +31,15 @@ def upload_air_quality_service(file, db):
             aqi= aqi_result,
             aqi_level = aqi_level_result
         )
-        rows.append(record)
+        aqi_rows.append(record)
+        if aqi_result > 300 :
+            alert_rows.append(Alerts(date= row["date"], city_name= row["city"], aqi= aqi_result))
     
-    db.add_all(rows)
+    db.add_all(aqi_rows)
+    db.add_all(alert_rows)
     db.commit()
     file.file.close()
-    return {"message": f"Uploaded {len(rows)}"}
+    return {"message": f"Uploaded {len(aqi_rows)} to air_quality ({len(alert_rows)})"}
 
 
 def get_air_quality(start_date, end_date, city, db):

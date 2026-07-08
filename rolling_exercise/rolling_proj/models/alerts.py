@@ -1,7 +1,7 @@
 import uuid
 
 from pydantic import ConfigDict
-from sqlalchemy import Column, Date, Float
+from sqlalchemy import Column, Date, Float, String
 from sqlalchemy.dialects.postgresql import UUID
 from pydantic import BaseModel, ConfigDict
 from datetime import date
@@ -13,6 +13,7 @@ class Alerts(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     date = Column(Date)
+    city_name = Column(String)
     aqi = Column(Float)
     # Only if we want to avoid dupelicating data
     # air_quality_id = Column(UUID(as_uuid=True), ForeignKey("air_quality.id"), nullable=False)
@@ -22,6 +23,7 @@ class Alerts_Response(BaseModel):
     id: uuid.UUID
     date: date
     city_name: str
+    aqi: float
 
     model_config = ConfigDict(from_attributes=True)
 
